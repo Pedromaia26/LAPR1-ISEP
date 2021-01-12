@@ -142,8 +142,8 @@ public class main_code {
         {
             System.out.println(mattD[i]);
         }
-        double matA [][]= mattD[0].toDenseMatrix().toArray();
-        double matB [][]= mattD[1].toDenseMatrix().toArray();
+        double[][] matA = mattD[0].toDenseMatrix().toArray();
+        double[][] matB = mattD[1].toDenseMatrix().toArray();
 
         mai = maior_valor(matB, matA, percentagem);
         return mai;
