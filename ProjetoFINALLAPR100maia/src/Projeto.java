@@ -26,14 +26,14 @@ public class Projeto {
         double[] percentagem = new double[mat1.length];
         int k = 0;
 
-        mat2 = transposta(mat2);
+        mat2 = calcular_matriz_transposta(mat2);
         double[][] fim = new double[mat1.length][mat2[0].length];
 
-        if (multiplicar1(mat1,mat2,fim)) {
+        if (verificar_multiplicacao(mat1,mat2,fim)) {
             System.out.println("Quantas gerações pretende calcular?");
             n = ler.nextInt();
-            double[] vecsoma = new double[n];
-            double[][] grafico= new double[mat1.length][n];
+            double[] vecsoma = new double[n+1];
+            double[][] grafico= new double[mat1.length][n+1];
             soma = 0;
             for (int i=0;i<grafico.length;i++){
                 grafico[i][0]=mat2[i][0];
@@ -41,7 +41,7 @@ public class Projeto {
             }
             vecsoma[k] = soma;
             k++;
-            for (int i=0;i<n-1;i++){
+            for (int i=0;i<n;i++){
                 soma = 0;
                 for (int j=0;j<mat1.length;j++) {
                     grafico[j][i+1] = fim[j][0];
@@ -50,13 +50,13 @@ public class Projeto {
                 }
                 vecsoma[k] = soma;
                 k++;
-                multiplicar1(mat1,mat2,fim);
+                verificar_multiplicacao(mat1,mat2,fim);
             }
             print(grafico);
             printar(vecsoma);
             taxa_variacao(vecsoma);
             num_individuos(vecsoma);
-            mvalorp = calcular_vetor_próprio(mat1, percentagem);
+            mvalorp = calcular_vetor_valor_próprio(mat1, percentagem);
             System.out.printf("Maior valor próprio -> %.4f\n", mvalorp);
             comp_assintotico(mvalorp);
             //printar(medias(grafico, vecsoma, n));
@@ -67,7 +67,7 @@ public class Projeto {
         }
     }
 
-    public static double[][] transposta(double[][] matriz){
+    public static double[][] calcular_matriz_transposta(double[][] matriz){
         double [][] matriztransposta =new double[matriz[0].length][matriz.length];
         for (int l=0;l<matriz.length;l++){
             for (int c=0;c<matriz[0].length;c++){
@@ -77,9 +77,9 @@ public class Projeto {
         return matriztransposta;
     }
 
-    public static boolean multiplicar1(double[][] matriz1, double[][] matriz2, double[][] fim) {
+    public static boolean verificar_multiplicacao(double[][] matriz1, double[][] matriz2, double[][] fim) {
         if (matriz1[0].length == matriz2.length) {
-            multiplicar2(matriz1, matriz2,fim);
+            calcular_multiplicacao_matrizes(matriz1, matriz2,fim);
             return true;
         } else {
             return false;
@@ -87,7 +87,7 @@ public class Projeto {
 
     }
 
-    public static void multiplicar2(double[][] matriz1, double[][] matriz2,double[][] fim){
+    public static void calcular_multiplicacao_matrizes(double[][] matriz1, double[][] matriz2,double[][] fim){
         for (int l = 0; l < matriz1.length; l++) {
             double soma = 0;
             for (int k = 0; k < matriz2.length; k++) {
@@ -111,15 +111,11 @@ public class Projeto {
         System.out.printf("%.2f\n", soma[n]);
     }
 
-    public static double calcular_vetor_próprio(double[][] matriz, double[] percentagem){
+    public static double calcular_vetor_valor_próprio(double[][] matriz, double[] percentagem){
         double mai;
         Matrix a = new Basic2DMatrix(matriz);
         EigenDecompositor eigenD = new EigenDecompositor(a);
         Matrix [] mattD= eigenD.decompose();
-        for(int i=0; i<2;i++)
-        {
-            System.out.println(mattD[i]);
-        }
         double[][] matA = mattD[0].toDenseMatrix().toArray();
         double[][] matB = mattD[1].toDenseMatrix().toArray();
 
@@ -136,11 +132,16 @@ public class Projeto {
                 maiorc = i;
             }
         }
-        vetor_proprio(maiorc, vetA, percentagem);
+
+        for (int j = 0; j < vetA.length; j++){
+            System.out.printf("[%.2f]", vetA[j][maiorc]);
+        }
+        System.out.println();
+        vetor_determinar_percentagem(maiorc, vetA, percentagem);
         return maior;
     }
 
-    public static void vetor_proprio(int coluna, double[][] vetA, double[] percentagem){
+    public static void vetor_determinar_percentagem(int coluna, double[][] vetA, double[] percentagem){
         double soma = 0;
 
         for (int i = 0; i < vetA.length; i++){
