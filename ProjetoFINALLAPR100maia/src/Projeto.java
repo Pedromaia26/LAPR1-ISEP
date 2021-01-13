@@ -6,14 +6,16 @@ import org.la4j.matrix.dense.Basic2DMatrix;
 
 import org.la4j.decomposition.EigenDecompositor;
 
+import java.util.Scanner;
+
 public class Projeto {
 
     public static void main(String[] args) {
-
-        double[][] mat1 = {{0, 3, 3.17, 0.39}, {0.11, 0, 0, 0}, {0, 0.29, 0, 0}, {0, 0, 0.33, 0}};
+        Scanner ler = new Scanner(System.in);
+        double[][] mat1 = {{0, 3.5, 1.5, 0.39}, {0.4, 0, 0, 0}, {0, 0.6, 0, 0}, {0, 0, 0.5, 0}};
         double matteste[][] = {{1, 5, -1}, {0, -2, 1}, {-4, 0, 3}};
-        double[][] mat2 = {{1000, 300, 330, 100}};
-        int n=50;
+        double[][] mat2 = {{600, 200, 130, 40}};
+        int n;
 
         //mat1.length //linhas
 
@@ -21,7 +23,6 @@ public class Projeto {
 
         double soma = 0;
         double mvalorp;
-        double[] vecsoma = new double[n];
         double[] percentagem = new double[mat1.length];
         int k = 0;
 
@@ -29,6 +30,9 @@ public class Projeto {
         double[][] fim = new double[mat1.length][mat2[0].length];
 
         if (multiplicar1(mat1,mat2,fim)) {
+            System.out.println("Quantas gerações pretende calcular?");
+            n = ler.nextInt();
+            double[] vecsoma = new double[n];
             double[][] grafico= new double[mat1.length][n];
             soma = 0;
             for (int i=0;i<grafico.length;i++){
@@ -51,6 +55,7 @@ public class Projeto {
             print(grafico);
             printar(vecsoma);
             taxa_variacao(vecsoma);
+            num_individuos(vecsoma);
             mvalorp = calcular_vetor_próprio(mat1, percentagem);
             System.out.printf("Maior valor próprio -> %.4f\n", mvalorp);
             comp_assintotico(mvalorp);
@@ -93,6 +98,18 @@ public class Projeto {
         }
     }
 
+    public static void num_individuos(double[] soma){
+        Scanner ler = new Scanner(System.in);
+        int n;
+        System.out.println("Indique qual a geração que pretende consultar.");
+        n = ler.nextInt();
+        while (n < 0 || n >= soma.length) {
+            System.out.println("Geração inválida.");
+            System.out.println("Indique qual a geração que pretende consultar.");
+            n = ler.nextInt();
+        }
+        System.out.printf("%.2f\n", soma[n]);
+    }
 
     public static double calcular_vetor_próprio(double[][] matriz, double[] percentagem){
         double mai;
